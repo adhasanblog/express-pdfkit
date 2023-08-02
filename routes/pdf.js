@@ -7,7 +7,10 @@ let imagePath = path.join(__dirname, '..', 'public', 'images', 'logo.png');
 
 router.post('/', (req, res) => {
   try {
-    const doc = new PDFDocument();
+    const doc = new PDFDocument({
+      size: 'letter',
+      layout: 'portrait',
+    });
     let filename = req.body.filename;
 
     filename = encodeURIComponent(filename) + '.pdf';
@@ -92,18 +95,21 @@ router.post('/', (req, res) => {
       .lineTo(590, 300) // set the end point
       .stroke(); // stroke the path
 
-    doc.font('C:/Windows/Fonts/Arial.ttf').fontSize(11).text('No', 35, 215);
-    doc.fontSize(11).text('Printed Date', 35, 235);
-    doc.fontSize(11).text('Due Date', 35, 255);
+    doc.font('C:/Windows/Fonts/Arialbd.ttf').fontSize(11).text('No', 35, 215);
+    doc
+      .font('C:/Windows/Fonts/Arialbd.ttf')
+      .fontSize(11)
+      .text('Printed Date', 35, 235);
+    doc
+      .font('C:/Windows/Fonts/Arialbd.ttf')
+      .fontSize(11)
+      .text('Due Date', 35, 255);
 
     doc.font('C:/Windows/Fonts/Arial.ttf').fontSize(11).text(':', 110, 215);
     doc.fontSize(11).text(':', 110, 235);
     doc.fontSize(11).text(':', 110, 255);
 
-    doc
-      .font('C:/Windows/Fonts/Arial.ttf')
-      .fontSize(11)
-      .text('SL/0113/XI/2019', 120, 215);
+    doc.fontSize(11).text('SL/0113/XI/2019', 120, 215);
     doc.fontSize(11).text('31/07/2023', 120, 235);
     doc.fontSize(11).text('31/07/2023', 120, 255);
 
@@ -113,10 +119,19 @@ router.post('/', (req, res) => {
 
     const gapToandAddress = doc.widthOfString(customerName) <= 175 ? 235 : 250;
 
-    doc.fontSize(11).text('To', pageWidth / 2 + 35, 215);
-    doc.fontSize(11).text('Address', pageWidth / 2 + 35, gapToandAddress);
+    doc
+      .font('C:/Windows/Fonts/Arialbd.ttf')
+      .fontSize(11)
+      .text('To', pageWidth / 2 + 35, 215);
+    doc
+      .font('C:/Windows/Fonts/Arialbd.ttf')
+      .fontSize(11)
+      .text('Address', pageWidth / 2 + 35, gapToandAddress);
 
-    doc.fontSize(11).text(':', pageWidth / 2 + 80, 215);
+    doc
+      .font('C:/Windows/Fonts/Arial.ttf')
+      .fontSize(11)
+      .text(':', pageWidth / 2 + 80, 215);
     doc.fontSize(11).text(':', pageWidth / 2 + 80, gapToandAddress);
 
     doc.fontSize(11).text(customerName, pageWidth / 2 + 90, 215, {
@@ -130,6 +145,109 @@ router.post('/', (req, res) => {
         width: 175,
         align: 'left',
       });
+
+    doc
+      .moveTo(20, 325) // set the start point
+      .lineTo(590, 325) // set the end point
+      .stroke(); // stroke the path
+
+    doc
+      .moveTo(20, 350) // set the start point
+      .lineTo(590, 350) // set the end point
+      .stroke(); // stroke the path
+
+    doc
+      .moveTo(20, 525) // set the start point
+      .lineTo(590, 525) // set the end point
+      .stroke(); // stroke the path
+
+    doc
+      .moveTo(20, 325) // set the start point
+      .lineTo(20, 525) // set the end point
+      .stroke(); // stroke the path
+
+    doc
+      .moveTo(50, 325) // set the start point
+      .lineTo(50, 525) // set the end point
+      .stroke(); // stroke the path
+
+    doc
+      .moveTo(pageWidth / 2 - 20, 325) // set the start point
+      .lineTo(pageWidth / 2 - 20, 525) // set the end point
+      .stroke(); // stroke the path
+
+    doc
+      .moveTo(pageWidth / 2 + 20, 325) // set the start point
+      .lineTo(pageWidth / 2 + 20, 625) // set the end point
+      .stroke(); // stroke the path
+
+    doc
+      .moveTo(pageWidth / 2 + 150, 325) // set the start point
+      .lineTo(pageWidth / 2 + 150, 625) // set the end point
+      .stroke(); // stroke the path
+
+    doc
+      .moveTo(590, 325) // set the start point
+      .lineTo(590, 625) // set the end point
+      .stroke(); // stroke the path
+
+    doc.font('C:/Windows/Fonts/Arialbd.ttf').fontSize(11).text('No', 25, 330);
+    doc
+      .font('C:/Windows/Fonts/Arialbd.ttf')
+      .fontSize(11)
+      .text('Descriptions of Goods', 55, 330);
+    doc
+      .font('C:/Windows/Fonts/Arialbd.ttf')
+      .fontSize(11)
+      .text('Qty', pageWidth / 2 - 10, 330);
+    doc
+      .font('C:/Windows/Fonts/Arialbd.ttf')
+      .fontSize(11)
+      .text('Price / Qty', pageWidth / 2 + 25, 330);
+    doc
+      .font('C:/Windows/Fonts/Arialbd.ttf')
+      .fontSize(11)
+      .text('Total / Price', pageWidth / 2 + 155, 330);
+
+    doc
+      .moveTo(pageWidth / 2 + 20, 550) // set the start point
+      .lineTo(590, 550) // set the end point
+      .stroke(); // stroke the path
+
+    doc
+      .moveTo(pageWidth / 2 + 20, 575) // set the start point
+      .lineTo(590, 575) // set the end point
+      .stroke(); // stroke the path
+
+    doc
+      .moveTo(pageWidth / 2 + 20, 600) // set the start point
+      .lineTo(590, 600) // set the end point
+      .stroke(); // stroke the path
+
+    doc
+      .moveTo(pageWidth / 2 + 20, 625) // set the start point
+      .lineTo(590, 625) // set the end point
+      .stroke(); // stroke the path
+
+    doc
+      .font('C:/Windows/Fonts/Arialbd.ttf')
+      .fontSize(11)
+      .text('Subtotal', pageWidth / 2 + 25, 530);
+
+    doc
+      .font('C:/Windows/Fonts/Arialbd.ttf')
+      .fontSize(11)
+      .text('Discount', pageWidth / 2 + 25, 555);
+
+    doc
+      .font('C:/Windows/Fonts/Arialbd.ttf')
+      .fontSize(11)
+      .text('PPN 11%', pageWidth / 2 + 25, 580);
+
+    doc
+      .font('C:/Windows/Fonts/Arialbd.ttf')
+      .fontSize(11)
+      .text('Total', pageWidth / 2 + 25, 605);
 
     doc.pipe(res);
     doc.end();
