@@ -1,18 +1,45 @@
 const express = require('express');
 const router = express.Router();
 const PDFDocument = require('pdfkit');
-const path = require('path');
+const terbilang = require('@develoka/angka-terbilang-js');
+const headerPdf = require('../public/javascripts/layout/header');
 
-let imagePath = path.join(__dirname, '..', 'public', 'images', 'logo.png');
+function capitalizeEveryWord(str) {
+  return str.replace(/\b\w/g, function (char) {
+    return char.toUpperCase();
+  });
+}
+
+function formatRupiah(angka) {
+  let number_string = angka.replace(/[^,\d]/g, '').toString(),
+    split = number_string.split(','),
+    sisa = split[0].length % 3,
+    rupiah = split[0].substr(0, sisa),
+    ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+  if (ribuan) {
+    separator = sisa ? '.' : '';
+    rupiah += separator + ribuan.join('.');
+  }
+
+  rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+  return 'Rp. ' + rupiah + ',-';
+}
 
 router.post('/', (req, res) => {
   try {
     const doc = new PDFDocument({
       size: 'letter',
+      margins: {
+        top: 0,
+        bottom: 0, // mengurangi margin bawah
+        left: 0,
+        right: 0,
+      },
       layout: 'portrait',
     });
     let filename = req.body.filename;
-
+    const menu = req.body.option;
     filename = encodeURIComponent(filename) + '.pdf';
 
     res.setHeader(
@@ -23,24 +50,7 @@ router.post('/', (req, res) => {
 
     const content = req.body.content;
 
-    doc.image(imagePath, 20, 20, { width: 100, height: 100 });
-    doc.fontSize(16).text('PT PERMANA PUTRA MANDIRI', 140, 30);
-    doc
-      .fontSize(11)
-      .text(
-        'Jl. Taman Mini Indonesia Indah (TMII) Pintu II Atas No. 43 Jakarta Timur',
-        140,
-        55
-      );
-    doc
-      .fontSize(11)
-      .text('Phone : +62-21 841 5976, Fax : +62-21 840 7865', 140, 70);
-    doc.fontSize(11).text('Website : www.alatkedokteran.id', 140, 85);
-    doc.fontSize(11).text('Email : info@alatkedokteran.id', 140, 100);
-    doc
-      .moveTo(20, 120) // set the start point
-      .lineTo(590, 120) // set the end point
-      .stroke(); // stroke the path
+    headerPdf(doc, menu);
 
     // End Header
 
@@ -248,6 +258,107 @@ router.post('/', (req, res) => {
       .font('C:/Windows/Fonts/Arialbd.ttf')
       .fontSize(11)
       .text('Total', pageWidth / 2 + 25, 605);
+
+    const price = 7354650;
+
+    doc
+      .font('C:/Windows/Fonts/Arialbd.ttf')
+      .fontSize(11)
+      .text(`# ${capitalizeEveryWord(terbilang(price))} Rupiah #`, 20, 645);
+
+    doc
+      .font('C:/Windows/Fonts/Arialbd.ttf')
+      .fontSize(11)
+      .text('Pembayaran dapat ditransfer :', 20, 690);
+
+    doc
+      .font('C:/Windows/Fonts/Arial.ttf')
+      .fontSize(11)
+      .text('Bank BNI Cabang Jatinegara', 20, 710);
+
+    doc
+      .font('C:/Windows/Fonts/Arial.ttf')
+      .fontSize(11)
+      .text('No. Rek 023 7106 145', 20, 725);
+
+    doc.fontSize(11).text('A/N : PT. Permana Putra Mandiri', 20, 740);
+
+    doc.fontSize(11).text('Hormat Kami,', 500, 670);
+
+    doc.fontSize(11).text('Ahmad Taufik', 500, 745);
+
+    const products = [
+      {
+        no: 1,
+        brand: 'Zoncare',
+        name: 'EKG Machine 12 Channel 10.4" Color LCD Touch Screen',
+        serial_number: '123456789',
+        qty: 1,
+        price: 1000000,
+      },
+
+      {
+        no: 2,
+        brand: 'Zoncare',
+        name: 'EKG Machine 12 Channel 10.4" Color LCD Touch Screen',
+        serial_number: '123456789',
+        qty: 1,
+        price: 1000000,
+      },
+
+      {
+        no: 3,
+        brand: 'Zoncare',
+        name: 'EKG Machine 12 Channel 10.4" Color LCD Touch Screen',
+        serial_number: '123456789',
+        qty: 1,
+        price: 1000000,
+      },
+
+      {
+        no: 4,
+        brand: 'Zoncare',
+        name: 'EKG Machine 12 Channel 10.4" Color LCD Touch Screen',
+        serial_number: '123456789',
+        qty: 1,
+        price: 1000000,
+      },
+    ];
+
+    let i = 0;
+    products.forEach((product) => {
+      doc.text(product.no.toString(), 25, 355 + i, {
+        width: 25,
+      });
+      doc.text(`${product.brand} ${product.name}`, 55, 355 + i, {
+        width: 175,
+        align: 'left',
+      });
+      doc.text(product.qty.toString(), pageWidth / 2 - 10, 355 + i);
+      doc.text(
+        formatRupiah(product.price.toString()),
+        pageWidth / 2 + 25,
+        355 + i,
+        {
+          width: 120,
+          align: 'right',
+        }
+      );
+      doc.text(
+        formatRupiah((product.qty * product.price).toString()),
+        pageWidth / 2 + 155,
+        355 + i,
+        {
+          width: 120,
+          align: 'right',
+        }
+      );
+
+      i += 30;
+    });
+
+    console.log(pageWidth / 2 + 20);
+    console.log(pageWidth / 2 + 150);
 
     doc.pipe(res);
     doc.end();

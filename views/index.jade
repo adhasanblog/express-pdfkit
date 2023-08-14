@@ -14,6 +14,18 @@ block content
               label.col-md-2.control-label Text
               .col-md-10
                 textarea.form-control(name="content", placeholder="Write some text for on your PDF!")
+                
+          .form-group
+              label.col-md-2.control-label Choose Option
+              .col-md-10
+                .input-group
+                  .radio
+                      input(type="radio", name="option", value="ppm") 
+                      label ppm
+                  .radio
+                      input(type="radio", name="option", value="rentmed") 
+                      label rentmed
+
           .form-group
               .col-sm-offset-2.col-sm-10
                 input.btn.btn-default(type="submit", value="Create PDF")
